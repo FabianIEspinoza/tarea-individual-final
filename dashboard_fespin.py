@@ -9,7 +9,7 @@ import openpyxl
 
 st.set_page_config(page_title="Dashboard Trabajo Final - Fabián Espinoza", layout="wide", page_icon="🗺️")
 
-st.title("🗺️ Inteligencia Logística y Territorial")
+st.title("Dashboard Trabajo Final - Fabián Espinoza")
 st.markdown("Análisis interactivo de la red de distribución y concentración territorial de ventas.")
 
 @st.cache_data
