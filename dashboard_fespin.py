@@ -7,24 +7,25 @@ import unicodedata
 import openpyxl
 
 
-st.set_page_config(page_title="Dashboard FEspin", layout="wide", page_icon="🗺️")
+st.set_page_config(page_title="Dashboard Trabajo Final - Fabián Espinoza", layout="wide", page_icon="🗺️")
 
 st.title("🗺️ Inteligencia Logística y Territorial")
 st.markdown("Análisis interactivo de la red de distribución y concentración territorial de ventas.")
 
-
 @st.cache_data
 def load_data():
     try:
-        df = pd.read_excel('dataset_tarea_ind.xlsx',engine='openpyxl')
+        df = pd.read_excel('dataset_tarea_ind.xlsx', engine='openpyxl')
     except Exception as e:
         st.error(f"Error al cargar los datos: {e}")
         return pd.DataFrame()
         
     columnas_numericas = ['venta_neta', 'lat', 'lng', 'kms_dist', 'lat_cd', 'lng_cd']
+    
+    # Conversión forzada y robusta: omitimos el 'if' condicional.
+    # Transformamos a string, reemplazamos coma por punto, y obligamos la conversión a numérico.
     for col in columnas_numericas:
-        if df[col].dtype == 'object':
-            df[col] = df[col].astype(str).str.replace(',', '.').astype(float)
+        df[col] = pd.to_numeric(df[col].astype(str).str.replace(',', '.'), errors='coerce')
             
     df = df.dropna(subset=['lat', 'lng', 'lat_cd', 'lng_cd', 'comuna'])
     
@@ -51,10 +52,15 @@ if not df.empty:
     if cd_seleccionado != 'Todos':
         df_filtrado = df_filtrado[df_filtrado['centro_dist'] == cd_seleccionado]
 
+    # Cálculos asignados a variables para mayor estabilidad
+    total_ventas = float(df_filtrado['venta_neta'].sum())
+    total_pedidos = int(len(df_filtrado))
+    distancia_media = float(df_filtrado['kms_dist'].mean())
+
     col1, col2, col3 = st.columns(3)
-    col1.metric("Ventas Netas Totales", f"${df_filtrado['venta_neta'].sum():,.0f}")
-    col2.metric("Volumen de Pedidos", f"{len(df_filtrado):,}")
-    col3.metric("Distancia Promedio Despacho", f"{df_filtrado['kms_dist'].mean():.1f} km")
+    col1.metric("Ventas Netas Totales", f"${total_ventas:,.0f}")
+    col2.metric("Volumen de Pedidos", f"{total_pedidos:,}")
+    col3.metric("Distancia Promedio Despacho", f"{distancia_media:.1f} km")
     
     st.divider()
 
