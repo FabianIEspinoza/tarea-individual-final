@@ -85,7 +85,7 @@ if not df.empty:
                 radius=4, color='#2b7bba', fill=True,
                 popup=f"Canal: {row['canal']} <br> Venta: ${row['venta_neta']}"
             ).add_to(marker_cluster)
-        st_folium(m_logistica, width=1200, height=500, returned_objects=[])
+        st_folium(m_logistica, width=1200, height=500, returned_objects=[], key="mapa_logistica")
 
     with tab2:
         st.subheader("Mapa de Calor: Concentración de Capital")
@@ -95,7 +95,7 @@ if not df.empty:
         if heat_data:
             HeatMap(heat_data, radius=15, blur=15, gradient={0.4: 'purple', 0.65: 'orange', 1: 'yellow'}).add_to(m_heat)
             
-        st_folium(m_heat, width=1200, height=500, returned_objects=[])
+        st_folium(m_heat, width=1200, height=500, returned_objects=[], key="mapa_calor")
 
     with tab3:
         st.subheader("Penetración Económica por Frontera Administrativa")
@@ -118,4 +118,4 @@ if not df.empty:
         except Exception as e:
             st.warning("Verifique la disponibilidad del archivo GeoJSON en el directorio de ejecución.")
             
-        st_folium(m_coro, width=1200, height=500, returned_objects=[])
+        st_folium(m_coro, width=1200, height=500, returned_objects=[], key="mapa_coropleta")
