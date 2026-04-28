@@ -22,8 +22,7 @@ def load_data():
         
     columnas_numericas = ['venta_neta', 'lat', 'lng', 'kms_dist', 'lat_cd', 'lng_cd']
     
-    # Conversión forzada y robusta: omitimos el 'if' condicional.
-    # Transformamos a string, reemplazamos coma por punto, y obligamos la conversión a numérico.
+
     for col in columnas_numericas:
         df[col] = pd.to_numeric(df[col].astype(str).str.replace(',', '.'), errors='coerce')
             
@@ -52,7 +51,6 @@ if not df.empty:
     if cd_seleccionado != 'Todos':
         df_filtrado = df_filtrado[df_filtrado['centro_dist'] == cd_seleccionado]
 
-    # Cálculos asignados a variables para mayor estabilidad
     total_ventas = float(df_filtrado['venta_neta'].sum())
     total_pedidos = int(len(df_filtrado))
     distancia_media = float(df_filtrado['kms_dist'].mean())
